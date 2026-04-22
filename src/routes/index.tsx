@@ -95,19 +95,19 @@ function HomePage() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-border pt-32 pb-24 sm:pt-40 lg:pt-48 lg:pb-32">
+    <section className="relative overflow-hidden border-b border-border pt-28 pb-20 sm:pt-36 sm:pb-24 lg:pt-44 lg:pb-32">
       <div className="gradient-radial pointer-events-none absolute inset-0" />
       <div className="editorial-grid pointer-events-none absolute inset-0 opacity-10" />
-      <div className="relative mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+      <div className="relative mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-16">
         <div>
           <p className="fade-up font-mono text-[11px] tracking-[0.22em] text-accent uppercase">
             cafeeverso.fun · global edition
           </p>
-          <h1 className="fade-up delay-100 mt-6 text-balance font-serif text-[44px] leading-[1.02] tracking-tight text-foreground sm:text-[62px] lg:text-[82px]">
+          <h1 className="fade-up delay-100 mt-5 text-balance font-serif text-[40px] leading-[1.04] tracking-tight text-foreground sm:mt-6 sm:text-[58px] lg:text-[80px]">
             Leitura, café e comunidade{" "}
             <span className="italic text-accent">global</span> em uma única plataforma.
           </h1>
-          <p className="fade-up delay-200 mt-8 max-w-xl text-balance text-[16px] leading-relaxed text-muted-foreground sm:text-[18px]">
+          <p className="fade-up delay-200 mt-6 max-w-xl text-balance text-[15.5px] leading-relaxed text-muted-foreground sm:mt-8 sm:text-[18px]">
             O Café &amp; Verso conecta pessoas, cafés, livrarias e eventos culturais em uma
             rede multilíngue com mapa global, NFTs de presença, bonificações digitais e
             experiências reais.
