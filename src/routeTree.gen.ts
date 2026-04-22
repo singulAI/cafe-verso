@@ -9,8 +9,56 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UsuariosRouteImport } from './routes/usuarios'
+import { Route as NftsRouteImport } from './routes/nfts'
+import { Route as MapaRouteImport } from './routes/mapa'
+import { Route as IntroRouteImport } from './routes/intro'
+import { Route as GestaoRouteImport } from './routes/gestao'
+import { Route as EventosRouteImport } from './routes/eventos'
+import { Route as EstabelecimentosRouteImport } from './routes/estabelecimentos'
+import { Route as ComunidadesRouteImport } from './routes/comunidades'
 import { Route as IndexRouteImport } from './routes/index'
 
+const UsuariosRoute = UsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NftsRoute = NftsRouteImport.update({
+  id: '/nfts',
+  path: '/nfts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapaRoute = MapaRouteImport.update({
+  id: '/mapa',
+  path: '/mapa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntroRoute = IntroRouteImport.update({
+  id: '/intro',
+  path: '/intro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GestaoRoute = GestaoRouteImport.update({
+  id: '/gestao',
+  path: '/gestao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventosRoute = EventosRouteImport.update({
+  id: '/eventos',
+  path: '/eventos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EstabelecimentosRoute = EstabelecimentosRouteImport.update({
+  id: '/estabelecimentos',
+  path: '/estabelecimentos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComunidadesRoute = ComunidadesRouteImport.update({
+  id: '/comunidades',
+  path: '/comunidades',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +67,144 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/comunidades': typeof ComunidadesRoute
+  '/estabelecimentos': typeof EstabelecimentosRoute
+  '/eventos': typeof EventosRoute
+  '/gestao': typeof GestaoRoute
+  '/intro': typeof IntroRoute
+  '/mapa': typeof MapaRoute
+  '/nfts': typeof NftsRoute
+  '/usuarios': typeof UsuariosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/comunidades': typeof ComunidadesRoute
+  '/estabelecimentos': typeof EstabelecimentosRoute
+  '/eventos': typeof EventosRoute
+  '/gestao': typeof GestaoRoute
+  '/intro': typeof IntroRoute
+  '/mapa': typeof MapaRoute
+  '/nfts': typeof NftsRoute
+  '/usuarios': typeof UsuariosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/comunidades': typeof ComunidadesRoute
+  '/estabelecimentos': typeof EstabelecimentosRoute
+  '/eventos': typeof EventosRoute
+  '/gestao': typeof GestaoRoute
+  '/intro': typeof IntroRoute
+  '/mapa': typeof MapaRoute
+  '/nfts': typeof NftsRoute
+  '/usuarios': typeof UsuariosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/comunidades'
+    | '/estabelecimentos'
+    | '/eventos'
+    | '/gestao'
+    | '/intro'
+    | '/mapa'
+    | '/nfts'
+    | '/usuarios'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/comunidades'
+    | '/estabelecimentos'
+    | '/eventos'
+    | '/gestao'
+    | '/intro'
+    | '/mapa'
+    | '/nfts'
+    | '/usuarios'
+  id:
+    | '__root__'
+    | '/'
+    | '/comunidades'
+    | '/estabelecimentos'
+    | '/eventos'
+    | '/gestao'
+    | '/intro'
+    | '/mapa'
+    | '/nfts'
+    | '/usuarios'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ComunidadesRoute: typeof ComunidadesRoute
+  EstabelecimentosRoute: typeof EstabelecimentosRoute
+  EventosRoute: typeof EventosRoute
+  GestaoRoute: typeof GestaoRoute
+  IntroRoute: typeof IntroRoute
+  MapaRoute: typeof MapaRoute
+  NftsRoute: typeof NftsRoute
+  UsuariosRoute: typeof UsuariosRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/usuarios': {
+      id: '/usuarios'
+      path: '/usuarios'
+      fullPath: '/usuarios'
+      preLoaderRoute: typeof UsuariosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nfts': {
+      id: '/nfts'
+      path: '/nfts'
+      fullPath: '/nfts'
+      preLoaderRoute: typeof NftsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mapa': {
+      id: '/mapa'
+      path: '/mapa'
+      fullPath: '/mapa'
+      preLoaderRoute: typeof MapaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/intro': {
+      id: '/intro'
+      path: '/intro'
+      fullPath: '/intro'
+      preLoaderRoute: typeof IntroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gestao': {
+      id: '/gestao'
+      path: '/gestao'
+      fullPath: '/gestao'
+      preLoaderRoute: typeof GestaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/eventos': {
+      id: '/eventos'
+      path: '/eventos'
+      fullPath: '/eventos'
+      preLoaderRoute: typeof EventosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/estabelecimentos': {
+      id: '/estabelecimentos'
+      path: '/estabelecimentos'
+      fullPath: '/estabelecimentos'
+      preLoaderRoute: typeof EstabelecimentosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comunidades': {
+      id: '/comunidades'
+      path: '/comunidades'
+      fullPath: '/comunidades'
+      preLoaderRoute: typeof ComunidadesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +217,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ComunidadesRoute: ComunidadesRoute,
+  EstabelecimentosRoute: EstabelecimentosRoute,
+  EventosRoute: EventosRoute,
+  GestaoRoute: GestaoRoute,
+  IntroRoute: IntroRoute,
+  MapaRoute: MapaRoute,
+  NftsRoute: NftsRoute,
+  UsuariosRoute: UsuariosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
