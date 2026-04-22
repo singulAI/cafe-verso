@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useApi } from "@/hooks/use-api";
+import { api, type Stats, type Establishment } from "@/lib/api";
 
 export const Route = createFileRoute("/gestao")({
   head: () => ({
@@ -56,28 +58,41 @@ const NAV = [
   { label: "Configurações", icon: Settings },
 ];
 
-const KPIS = [
-  { t: "Usuários ativos", v: "48.214", d: "+12,4%", up: true },
-  { t: "Estabelecimentos credenciados", v: "1.286", d: "+3,1%", up: true },
-  { t: "Eventos agendados", v: "342", d: "+8,7%", up: true },
-  { t: "NFTs emitidos", v: "12.940", d: "+22,9%", up: true },
-  { t: "$VERSO distribuído", v: "1.84M", d: "+5,2%", up: true },
-  { t: "Doações realizadas", v: "84.120", d: "+9,8%", up: true },
-  { t: "Campanhas em análise", v: "27", d: "−4", up: false },
-  { t: "Denúncias pendentes", v: "06", d: "−2", up: false },
-];
-
-const ESTAB = [
-  { name: "Café Aurora", country: "BR", type: "Café", plan: "Comunidade", status: "Ativo", wallet: "0x4f…c12a", camps: 4 },
-  { name: "Livraria Atlântica", country: "PT", type: "Livraria", plan: "Embaixador", status: "Ativo", wallet: "0x8b…7ad1", camps: 7 },
-  { name: "Verso House Berlin", country: "DE", type: "Espaço cultural", plan: "Embaixador", status: "Ativo", wallet: "0x12…ee3c", camps: 5 },
-  { name: "The Reading Cup NY", country: "US", type: "Café", plan: "Comunidade", status: "Em revisão", wallet: "0x9c…2b41", camps: 3 },
-  { name: "Café Horizonte Lisboa", country: "PT", type: "Café", plan: "Essencial", status: "Ativo", wallet: "0x6a…dd09", camps: 2 },
-  { name: "Biblioteca Viva Social", country: "BR", type: "Filantrópica", plan: "Café Aberto", status: "Ativo", wallet: "0x77…41cf", camps: 1 },
-  { name: "Páginas & Espresso", country: "AR", type: "Café · Livraria", plan: "Comunidade", status: "Ativo", wallet: "0x33…9b8e", camps: 4 },
-];
+function fmt(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(2).replace(".", ",")}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}k`;
+  return n.toString().padStart(2, "0");
+}
 
 function GestaoPage() {
+  const { data: stats } = useApi(() => api.stats() as Promise<Stats>, []);
+  const { data: establishments, loading: loadingEstab } = useApi(
+    () => api.establishments() as Promise<Establishment[]>,
+    [],
+  );
+
+  const kpis = stats
+    ? [
+        { t: "Usuários ativos", v: fmt(stats.users_active), d: `+${stats.users_growth_pct}%`, up: true },
+        { t: "Estabelecimentos credenciados", v: stats.establishments_total.toString(), d: "+3,1%", up: true },
+        { t: "Eventos agendados", v: stats.events_scheduled.toString(), d: "+8,7%", up: true },
+        { t: "NFTs emitidos", v: fmt(stats.nfts_issued), d: "+22,9%", up: true },
+        { t: "$VERSO distribuído", v: fmt(stats.verso_distributed), d: "+5,2%", up: true },
+        { t: "Doações realizadas", v: stats.donations_total.toString(), d: "+9,8%", up: true },
+        { t: "Campanhas em análise", v: stats.campaigns_pending.toString(), d: "−4", up: false },
+        { t: "Denúncias pendentes", v: stats.reports_pending.toString().padStart(2, "0"), d: "−2", up: false },
+      ]
+    : [
+        { t: "Usuários ativos", v: "28.4k", d: "+12,4%", up: true },
+        { t: "Estabelecimentos credenciados", v: "342", d: "+3,1%", up: true },
+        { t: "Eventos agendados", v: "47", d: "+8,7%", up: true },
+        { t: "NFTs emitidos", v: "9.850", d: "+22,9%", up: true },
+        { t: "$VERSO distribuído", v: "1,24M", d: "+5,2%", up: true },
+        { t: "Doações realizadas", v: "84", d: "+9,8%", up: true },
+        { t: "Campanhas em análise", v: "12", d: "−4", up: false },
+        { t: "Denúncias pendentes", v: "03", d: "−2", up: false },
+      ];
+
   return (
     <div className="flex min-h-screen bg-secondary/30">
       {/* Sidebar */}
@@ -162,7 +177,7 @@ function GestaoPage() {
 
           {/* KPIs */}
           <section className="mt-10 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
-            {KPIS.map((k) => (
+            {kpis.map((k) => (
               <div key={k.t} className="bg-card p-5">
                 <p className="font-mono text-[10px] tracking-[0.22em] text-muted-foreground uppercase">{k.t}</p>
                 <div className="mt-3 flex items-end justify-between">
@@ -229,10 +244,15 @@ function GestaoPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {ESTAB.map((e) => (
-                    <tr key={e.name} className="border-b border-border/60 last:border-0 hover:bg-secondary/40">
+                  {loadingEstab && (
+                    <tr>
+                      <td colSpan={8} className="px-5 py-8 text-center font-mono text-[11px] tracking-[0.15em] text-muted-foreground uppercase">Carregando…</td>
+                    </tr>
+                  )}
+                  {(establishments ?? []).map((e: Establishment) => (
+                    <tr key={e.id} className="border-b border-border/60 last:border-0 hover:bg-secondary/40">
                       <td className="px-5 py-3.5 font-serif text-[14px] text-foreground">{e.name}</td>
-                      <td className="px-5 py-3.5 font-mono text-[11px] text-muted-foreground">{e.country}</td>
+                      <td className="px-5 py-3.5 font-mono text-[11px] text-muted-foreground">{e.country ?? "—"}</td>
                       <td className="px-5 py-3.5 text-muted-foreground">{e.type}</td>
                       <td className="px-5 py-3.5">
                         <span className="rounded-full border border-border bg-secondary px-2 py-0.5 text-[11px] text-foreground">{e.plan}</span>
@@ -247,7 +267,7 @@ function GestaoPage() {
                         </span>
                       </td>
                       <td className="px-5 py-3.5 font-mono text-[11px] text-muted-foreground">{e.wallet}</td>
-                      <td className="px-5 py-3.5 text-muted-foreground">{e.camps}</td>
+                      <td className="px-5 py-3.5 text-muted-foreground">{e.active_campaigns}</td>
                       <td className="px-5 py-3.5 text-right">
                         <button className="inline-flex items-center gap-1 text-[12px] text-foreground underline-grow">
                           Abrir <ArrowUpRight strokeWidth={1.5} className="h-3 w-3" />

@@ -1,7 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowUpRight, Languages, Globe2, Calendar, Users } from "lucide-react";
+import { useState } from "react";
+import { ArrowUpRight, Languages, Globe2, Calendar, Users, Zap } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { SectionLabel } from "@/components/SectionLabel";
+import { useApi } from "@/hooks/use-api";
+import { api, type Community } from "@/lib/api";
 
 export const Route = createFileRoute("/comunidades")({
   head: () => ({
@@ -21,18 +24,13 @@ export const Route = createFileRoute("/comunidades")({
   component: ComunidadesPage,
 });
 
-const FILTERS = ["Todas", "Salas de leitura", "Salas de café", "Por idioma", "Por país", "Por tema literário"];
-
-const COMMUNITIES = [
-  { name: "Café & Poesia", lang: "PT · EN", country: "Global", members: "2.4k", theme: "Poesia", next: "Encontro · 14 mai" },
-  { name: "Fantasia Global", lang: "EN · ES · DE", country: "Global", members: "8.1k", theme: "Fantasia", next: "Clube · 17 mai" },
-  { name: "Filosofia à Meia-Noite", lang: "PT · ES", country: "BR · AR", members: "1.7k", theme: "Filosofia", next: "Sala · todas qua" },
-  { name: "Escrita Criativa Internacional", lang: "Multilíngue", country: "Global", members: "1.2k", theme: "Escrita", next: "Oficina · 23 mai" },
-  { name: "Livrarias Independentes", lang: "Multilíngue", country: "Global", members: "920", theme: "Curadoria", next: "Rota · 04 jun" },
-  { name: "Café Especial & Literatura", lang: "PT · EN", country: "BR · PT · US", members: "3.3k", theme: "Café · Leitura", next: "Encontro · 28 mai" },
-];
+const FILTERS = ["Todas", "Poesia", "Fantasia", "Filosofia", "Escrita", "Curadoria", "Café & Livros"];
 
 function ComunidadesPage() {
+  const [filter, setFilter] = useState("Todas");
+  const params = filter !== "Todas" ? { category: filter } : undefined;
+  const { data: communities, loading } = useApi(() => api.communities(params), [filter]);
+
   return (
     <>
       <PageHero
@@ -41,11 +39,12 @@ function ComunidadesPage() {
         subtitle="Salas de leitura, café, idioma, país e tema literário — com tradução automática entre participantes."
       >
         <div className="flex flex-wrap gap-2">
-          {FILTERS.map((f, i) => (
+          {FILTERS.map((f) => (
             <button
               key={f}
+              onClick={() => setFilter(f)}
               className={`rounded-full border px-4 py-2 text-[12.5px] transition-all ${
-                i === 0
+                filter === f
                   ? "border-foreground bg-foreground text-background"
                   : "border-border bg-card text-muted-foreground hover:border-accent/60 hover:text-foreground"
               }`}
@@ -60,35 +59,58 @@ function ComunidadesPage() {
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <SectionLabel number="01">Comunidades em destaque</SectionLabel>
 
-          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {COMMUNITIES.map((c) => (
-              <article key={c.name} className="group flex flex-col rounded-2xl border border-border bg-card p-6 lift">
-                <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
-                    <Languages strokeWidth={1.5} className="h-3 w-3" /> {c.lang}
-                  </span>
-                  <span className="font-mono text-[11px] text-muted-foreground">{c.members}</span>
-                </div>
+          {loading && (
+            <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-56 rounded-2xl border border-border bg-card animate-pulse" />
+              ))}
+            </div>
+          )}
 
-                <h3 className="mt-6 font-serif text-[22px] leading-tight text-foreground">{c.name}</h3>
-                <p className="mt-2 text-[13px] text-muted-foreground">{c.theme}</p>
+          {communities && (
+            <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {communities.map((c: Community) => (
+                <article key={c.id} className="group flex flex-col rounded-2xl border border-border bg-card p-6 lift">
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
+                      <Languages strokeWidth={1.5} className="h-3 w-3" /> {c.langs.join(" · ")}
+                    </span>
+                    <span className="font-mono text-[11px] text-muted-foreground">
+                      {c.members >= 1000 ? `${(c.members / 1000).toFixed(1)}k` : c.members}
+                    </span>
+                  </div>
 
-                <div className="mt-6 grid grid-cols-2 gap-3 text-[12px] text-foreground/85">
-                  <p className="flex items-center gap-1.5"><Globe2 strokeWidth={1.4} className="h-3.5 w-3.5 text-muted-foreground" /> {c.country}</p>
-                  <p className="flex items-center gap-1.5"><Calendar strokeWidth={1.4} className="h-3.5 w-3.5 text-muted-foreground" /> {c.next}</p>
-                </div>
+                  <h3 className="mt-6 font-serif text-[22px] leading-tight text-foreground">{c.name}</h3>
+                  <p className="mt-2 text-[13px] text-muted-foreground">{c.category}</p>
+                  <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground line-clamp-2">{c.description}</p>
 
-                <div className="mt-7 flex items-center justify-between border-t border-border/60 pt-4">
-                  <span className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground">
-                    <Users strokeWidth={1.4} className="h-3.5 w-3.5" /> Sala ativa
-                  </span>
-                  <button className="inline-flex items-center gap-1.5 text-[12px] text-foreground underline-grow">
-                    Entrar na sala <ArrowUpRight strokeWidth={1.5} className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
+                  <div className="mt-5 grid grid-cols-2 gap-3 text-[12px] text-foreground/85">
+                    <p className="flex items-center gap-1.5">
+                      <Globe2 strokeWidth={1.4} className="h-3.5 w-3.5 text-muted-foreground" />
+                      {c.country_flags.slice(0, 3).join(" · ")}
+                    </p>
+                    <p className="flex items-center gap-1.5">
+                      <Calendar strokeWidth={1.4} className="h-3.5 w-3.5 text-muted-foreground" />
+                      {c.events_this_month} eventos/mês
+                    </p>
+                    <p className="flex items-center gap-1.5">
+                      <Zap strokeWidth={1.4} className="h-3.5 w-3.5 text-accent" />
+                      <span className="text-accent">{c.active_now} ativos agora</span>
+                    </p>
+                  </div>
+
+                  <div className="mt-7 flex items-center justify-between border-t border-border/60 pt-4">
+                    <span className="inline-flex items-center gap-1.5 text-[12px] text-muted-foreground">
+                      <Users strokeWidth={1.4} className="h-3.5 w-3.5" /> Sala ativa
+                    </span>
+                    <button className="inline-flex items-center gap-1.5 text-[12px] text-foreground underline-grow">
+                      Entrar na sala <ArrowUpRight strokeWidth={1.5} className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

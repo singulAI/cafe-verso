@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { SectionLabel } from "@/components/SectionLabel";
+import { useApi } from "@/hooks/use-api";
+import { api, type Establishment } from "@/lib/api";
 
 export const Route = createFileRoute("/estabelecimentos")({
   head: () => ({
@@ -105,6 +107,8 @@ const STEPS = [
 ];
 
 function EstabPage() {
+  const { data: partners, loading: loadingPartners } = useApi(() => api.establishments(), []);
+
   return (
     <>
       <PageHero
@@ -267,10 +271,64 @@ function EstabPage() {
         </div>
       </section>
 
+      {/* Partners */}
+      <section className="border-b border-border py-24 lg:py-32">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <SectionLabel number="05">Parceiros ativos</SectionLabel>
+          <h2 className="max-w-2xl font-serif text-4xl leading-[1.05] tracking-tight text-foreground sm:text-5xl">
+            Espaços que já fazem parte do ecossistema.
+          </h2>
+
+          {loadingPartners && (
+            <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="h-44 animate-pulse rounded-2xl border border-border bg-card" />
+              ))}
+            </div>
+          )}
+
+          {partners && (
+            <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {partners.map((p: Establishment) => (
+                <article key={p.id} className="group rounded-2xl border border-border bg-card p-5 lift">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <h3 className="font-serif text-[17px] leading-tight text-foreground">{p.name}</h3>
+                      <p className="mt-1 text-[12px] text-muted-foreground">
+                        {p.city}{p.country ? ` · ${p.country}` : ""}
+                      </p>
+                    </div>
+                    {p.verified && (
+                      <span className="shrink-0 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-mono text-[9.5px] tracking-[0.18em] text-emerald-700 dark:text-emerald-400 uppercase">
+                        Verificado
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <span className="rounded-full border border-border bg-secondary px-2 py-0.5 text-[11px] text-foreground">{p.plan}</span>
+                    <span className="rounded-full border border-border bg-secondary px-2 py-0.5 text-[11px] text-muted-foreground">{p.type}</span>
+                  </div>
+                  <div className="mt-5 grid grid-cols-2 gap-3 border-t border-border/60 pt-4">
+                    <div>
+                      <p className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">NFTs emitidos</p>
+                      <p className="mt-1 font-serif text-[16px] text-foreground">{p.nfts_issued}</p>
+                    </div>
+                    <div>
+                      <p className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">$VERSO rec.</p>
+                      <p className="mt-1 font-serif text-[16px] text-foreground">{p.verso_received.toLocaleString("pt-BR")}</p>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Wallet */}
       <section className="border-b border-border py-24 lg:py-32">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <SectionLabel number="05">Wallet do estabelecimento</SectionLabel>
+          <SectionLabel number="06">Wallet do estabelecimento</SectionLabel>
           <h2 className="max-w-2xl font-serif text-4xl leading-[1.05] tracking-tight text-foreground sm:text-5xl">
             Painel financeiro cultural — claro e auditável.
           </h2>
