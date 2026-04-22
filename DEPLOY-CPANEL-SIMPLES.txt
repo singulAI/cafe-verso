@@ -1,0 +1,160 @@
+┌─────────────────────────────────────────────────────────────────┐
+│         🚀 DEPLOY CAFÉ & VERSO - VIA cPANEL                      │
+│            (Alternativa Rápida - SSH Bloqueado)                 │
+└─────────────────────────────────────────────────────────────────┘
+
+⏱️  TEMPO: 5 minutos | DIFICULDADE: Muito fácil
+
+═════════════════════════════════════════════════════════════════
+
+PASSO 1: FAZER DOWNLOAD
+───────────────────────
+
+Arquivo: cafe-verso-dist.zip (138 KB)
+Local: /workspaces/cafe-verso/cafe-verso-dist.zip
+
+👉 Faça download em sua máquina local
+
+
+PASSO 2: ACESSAR cPANEL
+──────────────────────
+
+URL do cPanel:
+ → https://srv993737.hstgr.cloud:2083/
+ 
+OU (se a acima não funcionar):
+ → seu-dominio.com/cpanel
+ → seu-dominio.com:2083
+
+✅ Use suas credenciais cPanel
+
+
+PASSO 3: ABRIR FILE MANAGER
+────────────────────────────
+
+Na tela principal do cPanel:
+
+1. Procure pelo ícone "File Manager"
+2. Clique nele
+3. Uma nova aba/janela abrirá
+
+
+PASSO 4: NAVEGAR PARA /public_html
+───────────────────────────────────
+
+Na árvore de pastas (lado esquerdo), procure por:
+
+  public_html/
+    └── cafeeverso.fun/  ← ENTRA AQUI
+
+OU se não encontrar essa pasta, vai direto para:
+
+  /home/seu_usuario/public_html/
+
+
+PASSO 5: FAZER UPLOAD DO ZIP
+─────────────────────────────
+
+Na pasta correta:
+1. Clique no botão "Upload" (topo do gerenciador)
+2. Arraste e solte o arquivo: cafe-verso-dist.zip
+3. Aguarde a barra de progresso terminar
+
+
+PASSO 6: EXTRAIR O ZIP
+──────────────────────
+
+Após upload:
+
+1. Clique DIREITO em: cafe-verso-dist.zip
+2. Opção: "Extract" ou "Extrair"
+3. Confirme, deixando a pasta padrão
+
+
+RESULTADO ESPERADO
+──────────────────
+
+Você verá:
+  ├── cafe-verso-dist.zip  (arquivo original)
+  ├── index.html           ✅ Importante!
+  ├── favicon.ico          ✅ Importante!
+  └── assets/              ✅ Pasta importante!
+      ├── styles-DlXpK...
+      └── index-MQ7z...
+
+
+PASSO 7: TESTAR NO NAVEGADOR
+─────────────────────────────
+
+Acesse: https://cafeeverso.fun/
+
+✅ Deverá carregar a página com:
+   • Logo "Café & Verso"
+   • Navbar fixa com menu
+   • Botão toggle tema (canto superior direito)
+   • Todas as rotas funcionando
+
+
+PASSO 8 (OPCIONAL): LIMPAR
+──────────────────────────
+
+Você pode deletar o arquivo cafe-verso-dist.zip
+Deixando apenas:
+  ✅ index.html
+  ✅ favicon.ico
+  ✅ assets/
+
+
+═════════════════════════════════════════════════════════════════
+
+🎉 PRONTO!
+
+Site está online em: https://cafeeverso.fun
+
+✅ Dark Mode / Light Mode → Funcional
+✅ Todas as rotas → Funcionais
+✅ Responsivo → Mobile/Tablet/Desktop
+✅ Pronto para apresentação → Para cliente Rafaela
+
+
+═════════════════════════════════════════════════════════════════
+
+❓ DÚVIDAS COMUNS
+
+P: Onde fico duram o upload?
+R: Monitore a barra de progresso no cPanel ou veja a pasta atualar
+
+P: Deu erro 404 ou página em branco?
+R: Certifique-se que index.html está na pasta certa
+   (não dentro de subpasta dist/ ou cafe-verso/)
+
+P: Como faço atualizações?
+R: Repita os passos 5-6 com o novo ZIP
+
+P: Como desfaço?
+R: Delete os arquivos e coloque de volta o backup
+
+
+═════════════════════════════════════════════════════════════════
+
+📧 COMPARTILHE COM CLIENTE
+
+Envie este link para Rafaela:
+
+   https://cafeeverso.fun
+
+Com a mensagem:
+
+   "MVP pronto para visualização em cafeeverso.fun
+    Veja o documento APRESENTACAO.md no repositório
+    para instruções de testes"
+
+
+═════════════════════════════════════════════════════════════════
+
+Sucesso! 🚀
+
+Café & Verso → Leitura, Café e Comunidade Global
+Deploy: 22 de Abril de 2026
+
+═════════════════════════════════════════════════════════════════

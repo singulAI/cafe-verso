@@ -1,0 +1,129 @@
+═══════════════════════════════════════════════════════════════════════════
+                    DEPLOY RÁPIDO - Café & Verso
+                         cafeeverso.fun
+═══════════════════════════════════════════════════════════════════════════
+
+STATUS: ✅ BUILD GERADO
+        ✅ SEM LOVABLE
+        ✅ PRONTO PARA DEPLOY
+
+═══════════════════════════════════════════════════════════════════════════
+                           PASSO 1: PREPARAR
+═══════════════════════════════════════════════════════════════════════════
+
+(A) Via SSH (Recomendado)
+─────────────────────────
+
+1. Defina suas credenciais:
+   export VPS_IP="123.45.67.89"         (seu IP da VPS)
+   export VPS_USER="root"               (ou ubuntu, etc)
+   export VPS_PORT="22"                 (porta padrão SSH)
+
+2. Execute o script:
+   chmod +x deploy.sh
+   ./deploy.sh
+
+3. Na VPS, configure SSL:
+   ssh root@123.45.67.89
+   sudo apt update
+   sudo apt install certbot python3-certbot-nginx -y
+   sudo certbot --nginx -d cafeeverso.fun
+   sudo systemctl restart nginx
+
+4. Pronto!
+   https://cafeeverso.fun
+
+
+(B) Via FTP/SFTP
+────────────────
+
+1. Defina credenciais:
+   export FTP_USER="seu-usuario"
+   export FTP_PASS="sua-senha"
+
+2. Execute:
+   chmod +x deploy-ftp.sh
+   ./deploy-ftp.sh
+
+
+(C) Manual (Sem script)
+───────────────────────
+
+1. Build local:
+   npm install
+   npm run build
+
+2. Criar arquivo:
+   tar -czf cafe-verso-dist.tar.gz dist/
+
+3. Enviar para VPS:
+   scp -P 22 cafe-verso-dist.tar.gz root@seu.ip.aqui:/tmp/
+
+4. Na VPS:
+   ssh root@seu.ip.aqui
+   
+   sudo mkdir -p /var/www/cafeeverso.fun/html
+   sudo tar -xzf /tmp/cafe-verso-dist.tar.gz -C /var/www/cafeeverso.fun/
+   sudo mv /var/www/cafeeverso.fun/dist/* /var/www/cafeeverso.fun/html/
+   sudo chown -R www-data:www-data /var/www/cafeeverso.fun
+   sudo chmod -R 755 /var/www/cafeeverso.fun
+
+5. Nginx:
+   sudo cp nginx.conf.cafeeverso.fun /etc/nginx/sites-available/cafeeverso.fun
+   sudo ln -s /etc/nginx/sites-available/cafeeverso.fun /etc/nginx/sites-enabled/
+   sudo nginx -t
+   sudo systemctl restart nginx
+
+6. SSL:
+   sudo apt install certbot python3-certbot-nginx -y
+   sudo certbot --nginx -d cafeeverso.fun
+   sudo systemctl restart nginx
+
+═══════════════════════════════════════════════════════════════════════════
+                      PASSO 2: VERIFICAR (Opcional)
+═══════════════════════════════════════════════════════════════════════════
+
+Na máquina local:
+─────────────────
+
+curl -I https://cafeeverso.fun
+
+Esperado: HTTP/2 200
+
+─────────────────
+
+curl https://cafeeverso.fun | head -20
+
+(Deve ter HTML com "CaféVerso")
+
+═══════════════════════════════════════════════════════════════════════════
+                      PASSO 3: COMPARTILHAR
+═══════════════════════════════════════════════════════════════════════════
+
+Envie para cliente Rafaela:
+
+"Link para aprovação:
+https://cafeeverso.fun
+
+Veja o arquivo APRESENTACAO.md para instruções de teste."
+
+═══════════════════════════════════════════════════════════════════════════
+                        CHECKLIST FINAL
+═══════════════════════════════════════════════════════════════════════════
+
+☐ VPS_IP definido
+☐ Build local executado (npm run build)
+☐ Deploy script executado (deploy.sh ou manual)
+☐ SSL configurado (certbot)
+☐ https://cafeeverso.fun acessível
+☐ Tema claro/escuro funcional
+☐ Rotas funcionam (usuarios, estabelecimentos, etc)
+☐ Cliente notificada com link
+
+═══════════════════════════════════════════════════════════════════════════
+
+Tempo estimado: 10-15 minutos
+
+Sucesso! 🚀
+
+═══════════════════════════════════════════════════════════════════════════
