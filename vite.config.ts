@@ -11,4 +11,12 @@ export default defineConfig({
     react(),
     viteTsconfigPaths(),
   ],
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:3001",
+        changeOrigin: true,
+      },
+    },
+  },
 });
